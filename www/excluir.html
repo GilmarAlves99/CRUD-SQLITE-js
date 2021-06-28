@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>BANCO DE DADOS SQLITE</title>
+    <link rel="stylesheet" type="text/css" href="fontawesome-free-5.12.0-web/css/all.css" />
+    <link rel="stylesheet" type="text/css" href="css/fontawesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="mobileui/style.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link rel="stylesheet" type="text/css" href="css/estilo.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script>
+        var db;
+        window.onload = function() {
+            document.getElementById("buscar").addEventListener('click', searchData);
+            document.getElementById("excluir").addEventListener('click', deleteData);
+            document.getElementById("excluirtudo").addEventListener('click', deletetudoData);
+            //nomedatabase, versaodatabase, nomedescricaodatabase, tamanhododatabase
+            db = window.openDatabase("phonegap", "1.0", "sqlite db", 200000);
+        }
+
+        function deleteData(e) {
+            db.transaction(deleteRecord, onSuccess, onError);
+        }
+
+        function deletetudoData(e) {
+            db.transaction(deletetudoRecord, onSuccess, onError);
+        }
+
+        function searchData(e) {
+            db.transaction(consultaRecord, onSuccess, onError);
+        }
+
+
+        function consultaRecord(transaction) {
+            var busca = document.getElementById('busca').value;
+            transaction.executeSql("SELECT * FROM contatos where Name='" + busca + "'", [], getSuccess, getError);
+
+        }
+
+        function deleteRecord(transaction) {
+            var busca = document.getElementById('busca').value;
+            var sql = "DELETE FROM contatos where Name='" + busca + "'";
+            transaction.executeSql(sql);
+            alert("Dados excluidos com sucesso");
+            location.reload();
+        }
+
+        function deletetudoRecord(transaction) {
+            var busca = document.getElementById('busca').value;
+            var sql = "DELETE FROM contatos";
+            transaction.executeSql(sql);
+            alert("Dados excluidos com sucesso");
+            location.reload();
+        }
+
+        function getSuccess(tx, result) {
+            var rows = result.rows;
+            for (var x = 0; x < rows.length; x++) {
+                var nome = result.rows[x].Name;
+                var email = result.rows[x].Email;
+                var saida = "<li>" + nome + "<br/>" + email + "</li>";
+                document.getElementById('dadoscadastrados').innerHTML += saida;
+            }
+
+
+            $('#dadoscadastrados').listview('refresh');
+        }
+
+        function getError(e) {
+            console.log(e);
+        }
+
+        function onSuccess() {
+            console.log("Operação Realizada com Sucesso");
+        }
+
+        function onError(error) {
+            console.log(error);
+        }
+    </script>
+
+
+
+</head>
+
+<body>
+
+    <div data-role="page">
+
+
+
+
+
+        <div data-role="header">
+            <h1>Excluir-CRUD SQLITE</h1>
+
+        </div>
+
+        <div data-role="main" class="ui-content">
+
+            <label for="name">Digite o nome para buscar:</label>
+            <input type="text" id="busca">
+            <button id="buscar" type="submit">Buscar nomes</button>
+            <hr>
+
+
+            <ul id="dadoscadastrados" data-role="listview"></ul> <br>
+            <button id="excluir" type="submit">Excluir</button><br>
+            <button id="excluirtudo" type="submit">Excluir TUDO</button>
+            <button id="voltar" onclick="location.href='index.html'">VOLTAR</button>
+            <script type="text/javascript" src="cordova.js">
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>
