@@ -9,3 +9,6 @@
 ![crud](https://user-images.githubusercontent.com/68366424/123683128-3b481700-d822-11eb-97bb-77a1df9f022c.gif)
 
 
+Visualizar em modelo de celular.
+
+https://gilmaralves99.github.io/CRUD-SQLITE-js/www/index.html
